@@ -1,30 +1,98 @@
-const bycrypt = require('bcrypt');
-const {Usuario} = require('../models/usuario.js');
-const userReqDto = require('../dtos/userReqDto.js');
-const userResDto = require('../dtos/userResDto.js');
+const bcrypt = require('bcrypt');
+const { Usuario } = require('../models/');
 const crypto = require('crypto');
 const { mailSender } = require('../utils/mailSerice.js');
+const { userReqDto, userResDto } = require('../dtos/userDtos.js');
 
 exports.criarUsuarios = async (req, res) => {
     try {
-        const dados = userReqDto.reqEntity(req.body);
+        const dados = userReqDto.toEntity(req.body);
 
-        const senhaHash = await bycrypt.hash(senha, 10);
+        const senhaHash = await bcrypt.hash(dados.senha, 12);
         dados.senha = senhaHash;
 
         const usuario = await Usuario.create(dados);
         res.status(201).json(userResDto.fromEntity(usuario));
     } catch (err) {
-        const error = new Error('Erro na criação de usuário.');
-        error.statusCode = 400;
-        throw error;   
+        res.status(400).json({erro: err.message})
+    }
+}
+
+exports.listarTodosUsuariosDeTalRoleEContar = async (req, res) => {
+    try {
+        const role = req.body;
+        if (role.role === "host") {
+            const {count, rows} = await Usuario.findAndCountAll({
+            where: {
+                role: {
+                   [Op.like]: `%${role.role}%`
+                },
+            },
+            offset: 10,
+            limit: 2,
+        })
+        if (!count || !rows) {
+            res.status(404).json({erro: `Not Found, falha ao buscar usuários ${role.role}, ou nenhum usuário comum existe.`});
+        }
+        const resultCount = count.map((count) => {rows.map((row) => {`${count}. ${row.name}, ${row.role}`})});
+        res.json(resultCount);
+        } if (role.role === "comum") {
+            const {count, rows} = await Usuario.findAndCountAll({
+            where: {
+                role: {
+                   [Op.like]: `%${role.role}%`
+                },
+            },
+            offset: 10,
+            limit: 2,
+        })
+        if (!count || !rows) {
+            res.status(404).json({erro: `Not Found, falha ao buscar usuários ${role.role}, ou nenhum usuário comum existe.`});
+        }
+        const resultCount = count.map((count) => {rows.map((row) => {`${count}. ${row.name}, ${row.role}`})});
+        res.json(resultCount);
+        } if ( role.role === "admin") {
+            const {count, rows} = await Usuario.findAndCountAll({
+            where: {
+                role: {
+                   [Op.like]: `%${role.role}%`
+                },
+            },
+            offset: 10,
+            limit: 2,
+        })
+        if (!count || !rows) {
+            res.status(404).json({erro: `Not Found, falha ao buscar usuários ${role.role}, ou nenhum usuário comum existe.`});
+        }
+        const resultCount = count.map((count) => {rows.map((row) => {`${count}. ${row.name}, ${row.role}`})});
+        res.json(resultCount);
+        }
+    } catch (err) {
+        res.status(400).json({erro: err.message})
+    }
+}
+
+exports.buscarUsuarioPorId = async (req, res) => {
+    try {
+        const id = req.body
+        if (!id) {
+            throw new Error('Id é um campo obrigatório para buscar por Id.');
+        }
+        const user = Usuario.findById({where: {id: id}});
+        if (!user) {
+            res.status(404).json({erro: 'Not Found, usuário com este id não foi encontrado.'});
+        }
+
+        res.json(user)
+    } catch (err) {
+        res.status(400).json({erro: err.message})
     }
 }
 
 exports.solicitarVerificacao = async (req, res) => {
     try {
         const {email} = req.body;
-        const usuario = Usuario.findOne({where: {email}});
+        const usuario = Usuario.findOne({where: {email: email}});
 
         if (!usuario) {
             res.status(404).json({erro: 'Not Found, usuário não encontrado'});
