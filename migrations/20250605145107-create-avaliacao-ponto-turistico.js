@@ -2,27 +2,18 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Hospedagens', {
+    await queryInterface.createTable('AvaliacaoPontoTuristicos', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      nomeDaHospedagem: {
-        type: Sequelize.STRING
-      },
-      descricao: {
-        type: Sequelize.STRING
-      },
-      estrelas: {
+      nota: {
         type: Sequelize.INTEGER
       },
-      enderecoId: {
-        type: Sequelize.INTEGER
-      },
-      hospedagemId: {
-        type: Sequelize.INTEGER
+      comentario: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -35,6 +26,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Hospedagens');
+    await queryInterface.dropTable('AvaliacaoPontoTuristicos');
   }
 };
