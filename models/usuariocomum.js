@@ -14,10 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   UsuarioComum.init({
-    nomeCompleto: DataTypes.STRING,
-    dataNascimento: DataTypes.DATE,
-    usuarioId: DataTypes.STRING,
-    enderecoId: DataTypes.INTEGER
+    preferenciasViagem: DataTypes.JSONB
   }, {
     sequelize,
     modelName: 'UsuarioComum',
