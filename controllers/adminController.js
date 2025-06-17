@@ -1,0 +1,77 @@
+const bcrypt = require('bcrypt');
+const { Usuario } = require('../models/');
+const crypto = require('crypto');
+const { mailSender } = require('../utils/mailSerice.js');
+const { admReqDto, admResDto } = require('../dtos/userDtos.js');
+
+exports.criarAdmin = async (req, res) => {
+    try {
+        const dados = admReqDto.toEntity(req.body);
+
+        const senhaHash = await bcrypt.hash(dados.senha, 12);
+        dados.senha = senhaHash;
+
+        const admin = await Usuario.create(dados);
+        return res.status(201).json(admResDto.fromEntity(admin));
+    } catch (err) {
+        return res.status(400).json({ erro: err.message });
+    }
+}
+
+exports.listarTodosAdminsEContar = async (req, res) => {
+    try {
+        const { count, rows } = await Usuario.findAndCountAll({
+            where: {
+                role: 'admin'
+            },
+            offset: 10,
+            limit: 2,
+        });
+
+        if (!count || !rows) {
+            return res.status(404).json({ erro: 'Not Found, falha ao buscar usuários admin, ou nenhum usuário admin existe.' });
+        }
+
+        const resultCount = rows.map((row) => `${row.id}. ${row.name}, ${row.role}`);
+        return res.json(resultCount);
+    } catch (err) {
+        return res.status(500).json({ erro: err.message });
+    }
+}
+
+exports.enviarEmailRecuperacaoSenha = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const usuario = await Usuario.findOne({ where: { email } });
+
+        if (!usuario) {
+            return res.status(404).json({ erro: 'Usuário não encontrado.' });
+        }
+
+        const token = crypto.randomBytes(32).toString('hex');
+        usuario.tokenRecuperacaoSenha = token;
+        await usuario.save();
+
+        const linkRecuperacao = `http://localhost:3000/recuperar-senha/${token}`;
+        await mailSender(usuario.email, 'Recuperação de Senha', `Clique no link para recuperar sua senha: ${linkRecuperacao}`);
+
+        return res.status(200).json({ mensagem: 'Email de recuperação enviado com sucesso.' });
+    } catch (err) {
+        return res.status(500).json({ erro: err.message });
+    }
+}   
+
+exports.buscarAdmporiD = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const admin = await Usuario.findByPk(id);
+
+        if (!admin) {
+            return res.status(404).json({ erro: 'Usuário admin não encontrado.' });
+        }
+
+        return res.json(admResDto.fromEntity(admin));
+    } catch (err) {
+        return res.status(500).json({ erro: err.message });
+    }
+}

@@ -2,20 +2,17 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('PontosTuristicos', {
+    await queryInterface.createTable('Favoritos', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      nomeDoPonto: {
+      entidadeTipo: {
         type: Sequelize.STRING
       },
-      descricao: {
-        type: Sequelize.STRING
-      },
-      enderecoId: {
+      entidadeId: {
         type: Sequelize.INTEGER
       },
       createdAt: {
@@ -29,6 +26,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('PontosTuristicos');
+    await queryInterface.dropTable('Favoritos');
   }
 };
