@@ -1,4 +1,4 @@
-modules.exports = {
+module.exports = {
     fromEntity: (usuario) => {  
         if (!usuario || !usuario.id || !usuario.nome || !usuario.email || !usuario.role) {
             throw new Error('Dados do usuário inválidos.');

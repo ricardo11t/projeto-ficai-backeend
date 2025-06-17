@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const { Admin } = require('../models/');
+const { Usuario } = require('../models/');
 const crypto = require('crypto');
 const { mailSender } = require('../utils/mailSerice.js');
 const { admReqDto, admResDto } = require('../dtos/userDtos.js');
@@ -12,9 +12,9 @@ exports.criarAdmin = async (req, res) => {
         dados.senha = senhaHash;
 
         const admin = await Usuario.create(dados);
-        res.status(201).json(admResDto.fromEntity(admin));
+        return res.status(201).json(admResDto.fromEntity(admin));
     } catch (err) {
-        res.status(400).json({ erro: err.message });
+        return res.status(400).json({ erro: err.message });
     }
 }
 
@@ -33,9 +33,9 @@ exports.listarTodosAdminsEContar = async (req, res) => {
         }
 
         const resultCount = rows.map((row) => `${row.id}. ${row.name}, ${row.role}`);
-        res.json(resultCount);
+        return res.json(resultCount);
     } catch (err) {
-        res.status(500).json({ erro: err.message });
+        return res.status(500).json({ erro: err.message });
     }
 }
 
@@ -55,9 +55,9 @@ exports.enviarEmailRecuperacaoSenha = async (req, res) => {
         const linkRecuperacao = `http://localhost:3000/recuperar-senha/${token}`;
         await mailSender(usuario.email, 'Recuperação de Senha', `Clique no link para recuperar sua senha: ${linkRecuperacao}`);
 
-        res.status(200).json({ mensagem: 'Email de recuperação enviado com sucesso.' });
+        return res.status(200).json({ mensagem: 'Email de recuperação enviado com sucesso.' });
     } catch (err) {
-        res.status(500).json({ erro: err.message });
+        return res.status(500).json({ erro: err.message });
     }
 }   
 
@@ -70,8 +70,8 @@ exports.buscarAdmporiD = async (req, res) => {
             return res.status(404).json({ erro: 'Usuário admin não encontrado.' });
         }
 
-        res.json(admResDto.fromEntity(admin));
+        return res.json(admResDto.fromEntity(admin));
     } catch (err) {
-        res.status(500).json({ erro: err.message });
+        return res.status(500).json({ erro: err.message });
     }
 }

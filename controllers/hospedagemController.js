@@ -1,7 +1,4 @@
-const bycript = require('bcrypt');
 const { Hospedagem } = require('../models/');
-const crypto = require('crypto');
-const { mailSender } = require('../utils/mailSerice.js');
 const { hospedagemReqDto, hospedagemResDto } = require('../dtos/hospedagemDtos.js');
 
 exports.criarHospedagem = async (req, res) => {
@@ -9,9 +6,9 @@ exports.criarHospedagem = async (req, res) => {
         const dados = hospedagemReqDto.toEntity(req.body);
 
         const hospedagem = await Hospedagem.create(dados);
-        res.status(201).json(hospedagemResDto.fromEntity(hospedagem));
+        return res.status(201).json(hospedagemResDto.fromEntity(hospedagem));
     } catch (err) {
-        res.status(400).json({ erro: err.message });
+        return res.status(400).json({ erro: err.message });
     }
 };
 
@@ -24,10 +21,17 @@ exports.buscarHospedagensporNumero = async (req, res) => {
             return res.status(404).json({ erro: 'Hospedagem não encontrada.' });
         }
 
-        res.json(hospedagemResDto.fromEntity(hospedagem));
+        return res.json(hospedagemResDto.fromEntity(hospedagem));
     } catch (err) {
-        res.status(500).json({ erro: err.message });
+        return res.status(500).json({ erro: err.message });
     }
 }
 
-exports.
+exports.buscarHospedagens = async (req, res) => {
+    try {
+        const hospedagens = await Hospedagem.findAll();
+        return res.json(hospedagens.map(hospedagem => hospedagemResDto.fromEntity(hospedagem)));
+    } catch (err) {
+        return res.status(500).json({ erro: err.message });
+    }
+}
