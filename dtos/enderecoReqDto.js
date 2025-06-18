@@ -12,7 +12,7 @@ module.exports = {
             cidade: body.cidade,
             estado: body.estado.toUpperCase(),
             cep: body.cep,
-            complemento: body.complemento 
+            complemento: body.complemento
         }
     }
 }

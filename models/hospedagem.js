@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     capacidadeMaxima: DataTypes.INTEGER,
     numeroQuartos: DataTypes.INTEGER,
     numeroBanheiros: DataTypes.INTEGER,
-    comodidades: DataTypes.JSONB,
+    comodidades: DataTypes.JSON,
     regrasCasa: DataTypes.TEXT,
     precoPorNoite: DataTypes.DECIMAL,
     taxaLimpeza: DataTypes.DECIMAL,
