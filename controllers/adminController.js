@@ -1,45 +1,46 @@
 const bcrypt = require('bcrypt');
-const { Usuario } = require('../models/');
+const { admin } = require('../models/');
 const crypto = require('crypto');
 const { mailSender } = require('../utils/mailSerice.js');
 const { admReqDto, admResDto } = require('../dtos/userDtos.js');
 
-exports.criarAdmin = async (req, res) => {
-    try {
-        const dados = admReqDto.toEntity(req.body);
+const adminController = {
+    criarAdmin: async (req, res) => {
+        try {
+            const dados = admReqDto.toEntity(req.body);
 
-        const senhaHash = await bcrypt.hash(dados.senha, 12);
-        dados.senha = senhaHash;
+            const senhaHash = await bcrypt.hash(dados.senha, 12);
+            dados.senha = senhaHash;
 
-        const admin = await Usuario.create(dados);
-        return res.status(201).json(admResDto.fromEntity(admin));
-    } catch (err) {
-        return res.status(400).json({ erro: err.message });
-    }
-}
-
-exports.listarTodosAdminsEContar = async (req, res) => {
-    try {
-        const { count, rows } = await Usuario.findAndCountAll({
-            where: {
-                role: 'admin'
-            },
-            offset: 10,
-            limit: 2,
-        });
-
-        if (!count || !rows) {
-            return res.status(404).json({ erro: 'Not Found, falha ao buscar usuários admin, ou nenhum usuário admin existe.' });
+            const admin = await Usuario.create(dados);
+            return res.status(201).json(admResDto.fromEntity(admin));
+        } catch (err) {
+            return res.status(400).json({ erro: err.message });
         }
+    },
 
-        const resultCount = rows.map((row) => `${row.id}. ${row.name}, ${row.role}`);
-        return res.json(resultCount);
-    } catch (err) {
-        return res.status(500).json({ erro: err.message });
-    }
-}
+    listarTodosAdminsEContar: async (req, res) => {
+        try {
+            const { count, rows } = await Usuario.findAndCountAll({
+                where: {
+                    role: 'admin'
+                },
+                offset: 10,
+                limit: 2,
+            });
 
-exports.enviarEmailRecuperacaoSenha = async (req, res) => {
+            if (!count || !rows) {
+                return res.status(404).json({ erro: 'Not Found, falha ao buscar usuários admin, ou nenhum usuário admin existe.' });
+            }
+
+            const resultCount = rows.map((row) => `${row.id}. ${row.name}, ${row.role}`);
+            return res.json(resultCount);
+        } catch (err) {
+            return res.status(500).json({ erro: err.message });
+        }
+    },
+
+ enviarEmailRecuperacaoSenha: async (req, res) => {
     try {
         const { email } = req.body;
         const usuario = await Usuario.findOne({ where: { email } });
@@ -59,9 +60,9 @@ exports.enviarEmailRecuperacaoSenha = async (req, res) => {
     } catch (err) {
         return res.status(500).json({ erro: err.message });
     }
-}   
+},   
 
-exports.buscarAdmporiD = async (req, res) => {
+  buscarAdmporiD: async (req, res) => {
     try {
         const id = req.params.id;
         const admin = await Usuario.findByPk(id);
@@ -75,3 +76,5 @@ exports.buscarAdmporiD = async (req, res) => {
         return res.status(500).json({ erro: err.message });
     }
 }
+};
+module.exports = adminController;
