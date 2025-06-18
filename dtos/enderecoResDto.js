@@ -5,7 +5,7 @@ module.exports = {
             rua: endereco.rua,
             numero: endereco.numero,
             cidade: endereco.cidade,
-            estado: endereco.endereco,
+            estado: endereco.estado,
             cep: endereco.cep,
             complemento: endereco.complemento,
             createdAt: endereco.createdAt,
