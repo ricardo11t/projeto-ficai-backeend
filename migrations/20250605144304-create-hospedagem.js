@@ -55,7 +55,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       comodidades: {
-        type: Sequelize.JSONB
+        type: Sequelize.JSON
       },
       regrasCasa: {
         type: Sequelize.TEXT
