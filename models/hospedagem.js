@@ -37,6 +37,9 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Hospedagem',
+    tableName: 'hospedagens', // <-- Mude para 'hospedagens' minúsculo (consistência)
+    timestamps: true,
+    underscored: true,
   });
   return Hospedagem;
 };
