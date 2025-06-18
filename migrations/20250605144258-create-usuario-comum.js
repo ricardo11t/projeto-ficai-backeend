@@ -10,7 +10,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       preferenciasViagem: {
-        type: Sequelize.JSONB
+        type: Sequelize.JSON
       },
       createdAt: {
         allowNull: false,

@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   UsuarioComum.init({
-    preferenciasViagem: DataTypes.JSONB
+    preferenciasViagem: DataTypes.JSON
   }, {
     sequelize,
     modelName: 'UsuarioComum',
