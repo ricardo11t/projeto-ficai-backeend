@@ -62,19 +62,29 @@ const adminController = {
     }
 },   
 
-  buscarAdmporiD: async (req, res) => {
-    try {
-        const id = req.params.id;
-        const admin = await Usuario.findByPk(id);
+   buscarAdmPorId: async (req, res) => {
+ const { id } = req.params;
 
-        if (!admin) {
-            return res.status(404).json({ erro: 'Usuário admin não encontrado.' });
-        }
 
-        return res.json(admResDto.fromEntity(admin));
+  // Verifica se o ID foi informado antes de qualquer operação
+  if (!id) {
+    return res.status(400).json({ erro: 'Id é um campo obrigatório para buscar por Id.' });
+  }
+
+  try {
+    // Suponha que esteja usando algum model, por exemplo:
+    const adm = await admin.findByPk(id);
+
+    if (!adm) {
+  return res.status(404).json({ erro: 'Administrador não encontrado.' });
+}
+
+return res.status(200).json(adm);
+
     } catch (err) {
         return res.status(500).json({ erro: err.message });
     }
 }
 };
-module.exports = adminController;
+
+module.exports = adminController

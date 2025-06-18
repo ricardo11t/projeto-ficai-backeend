@@ -3,16 +3,7 @@ const { hospedagemReqDto, hospedagemResDto } = require('../dtos/hospedagemDtos.j
 
 
 const hospedagemController = {
-    criarHospedagem: async (req, res) => {
-        try {
-            const dados = hospedagemReqDto.toEntity(req.body);
-
-            const hospedagem = await Hospedagem.create(dados);
-            return res.status(201).json(hospedagemResDto.fromEntity(hospedagem));
-        } catch (err) {
-            return res.status(400).json({ erro: err.message });
-        }
-    },
+    
 
     buscarHospedagensporNumero: async (req, res) => {
         try {
@@ -57,7 +48,29 @@ const hospedagemController = {
         } catch (err) {
             return res.status(500).json({ erro: err.message });
         }
+    },
+    // Adicione mais métodos conforme necessário
+    avaliacaoHospedagem: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const avaliacao = hospedagemReqDto.toEntity(req.body);
+            const hospedagem = await Hospedagem.findByPk(id);
+
+            if (!hospedagem) {
+                return res.status(404).json({ erro: 'Hospedagem não encontrada.' });
+            }
+
+
+            return res.status(201).json({ mensagem: 'Avaliação criada com sucesso.' });
+        } catch (err) {
+            return res.status(500).json({ erro: err.message });
+        }
     }
+
+    // Outros métodos do controller podem ser adicionados aqui
+
+
+
 };
 
 module.exports = hospedagemController;

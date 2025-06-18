@@ -1,13 +1,13 @@
 module.exports = {
-    fromEntity: (usuario) => {  
-        if (!usuario || !usuario.id || !usuario.nome || !usuario.email || !usuario.role) {
-            throw new Error('Dados do usuário inválidos.');
+    fromEntity: (admin) => {  
+        if (!usuario || !admin.id || !admin.nome || !admin.email || !admin.role) {
+            throw new Error('Dados do admin inválidos.');
         }
         return {
-            id: usuario.id,
-            nome: usuario.nome,
-            email: usuario.email,
-            role: usuario.role
+            id: admin.id,
+            nome: admin.nome,
+            email: admin.email,
+            role: admin.role
         };
     }
 }
