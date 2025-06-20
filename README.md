@@ -1,10 +1,10 @@
 .env:
-DB_USERNAME=root
-DB_PASSWORD=1234
-DB_NAME=ficai_backend
-DB_HOST=localhost
-DB_PORT=3306
-DB_DIALECT=mysql
+DB_USERNAME=
+DB_PASSWORD=
+DB_NAME=
+DB_HOST=
+DB_PORT=
+DB_DIALECT=
 
 ```
 npx sequelize-cli db:create
