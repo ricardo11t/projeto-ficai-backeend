@@ -1,5 +1,5 @@
-const bcrypt = require('bcrypt');
 const { Usuario } = require('../models/');
+const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const { mailSender } = require('../utils/mailSerice.js');
 const { userReqDto, userResDto } = require('../dtos/userDtos.js');
